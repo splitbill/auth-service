@@ -1,1 +1,5 @@
-console.log("hello world111!");
+const HelloWorld = () => "hello world";
+
+export {
+    HelloWorld,
+}

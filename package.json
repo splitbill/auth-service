@@ -7,14 +7,26 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js",
-    "start:dev": "nodemon --config nodemon.json src/index.ts"
+    "start": "npx run build && node build/index.js",
+    "start:dev": "nodemon --config nodemon.json src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default",
+    "test:watch": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default --watchAll",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.22",
     "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "rimraf": "^3.0.2",
+    "ts-jest": "^26.5.5",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
