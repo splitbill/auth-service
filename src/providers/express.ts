@@ -7,6 +7,7 @@ import { query } from "./database";
 import morganMiddleware from "../middlewares/morgan.middleware";
 import Logger from "./logger";
 import httpStatus from 'http-status';
+import {router} from "../api/v1";
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(compress());
 app.use(morganMiddleware);
+
+app.use('/api/v1', router);
 
 app.get('/', async (req: Request, res: Response, next: NextFunction) => {
     const result = await query('SELECT NOW()');
