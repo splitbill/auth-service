@@ -7,7 +7,7 @@ import morganMiddleware from '../middlewares/morgan.middleware';
 import Logger from "./logger";
 import httpStatus from 'http-status';
 import { router } from '../api/v1';
-import {HttpException} from "../helpers/error";
+import {HttpException} from '../helpers/error';
 
 const app = express();
 
