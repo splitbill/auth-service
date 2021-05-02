@@ -1,13 +1,13 @@
-import express, {NextFunction, Request, Response} from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import compress from 'compression';
-import { query } from "./database";
-import morganMiddleware from "../middlewares/morgan.middleware";
+import morganMiddleware from '../middlewares/morgan.middleware';
 import Logger from "./logger";
 import httpStatus from 'http-status';
-import {router} from "../api/v1";
+import { router } from '../api/v1';
+import {HttpException} from "../helpers/error";
 
 const app = express();
 
@@ -20,15 +20,10 @@ app.use(morganMiddleware);
 
 app.use('/api/v1', router);
 
-app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    const result = await query('SELECT NOW()');
-});
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    const err = new Error(`API not Found`);
-    res.status(httpStatus.NOT_FOUND);
-    return next(err);
+    const err = new HttpException(`API not Found`, httpStatus.NOT_FOUND);
+    next(err);
 });
 
 app.get("/logger", (_, res) => {
