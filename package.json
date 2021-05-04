@@ -25,6 +25,7 @@
     "@types/jest": "^26.0.22",
     "@types/morgan": "^1.9.2",
     "@types/node": "^14.14.41",
+    "@types/redis": "^2.8.28",
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
@@ -37,16 +38,15 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@types/express-validator": "^3.0.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-validator": "^6.10.1",
     "express-winston": "^4.1.0",
     "helmet": "^4.5.0",
     "http-status": "^1.5.0",
     "morgan": "^1.10.0",
+    "redis": "^3.1.2",
     "winston": "^3.3.3"
   }
 }

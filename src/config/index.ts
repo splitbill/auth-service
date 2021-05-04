@@ -12,4 +12,6 @@ if (result.error) {
 export default {
     env: process.env.NODE_ENV,
     PORT: process.env.PORT,
+    redis_host: process.env.RSHOST,
+    redis_port: Number(process.env.RSPORT),
 }
