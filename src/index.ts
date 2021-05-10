@@ -6,7 +6,14 @@ import Logger from "./providers/logger";
 /**
  * load database
  */
-(async () => await database.createTables())();
+(async () =>  {
+    try {
+        await database.createDB();
+        Logger.info('database is connected!');
+    } catch (err) {
+        Logger.error(`Database not connected: ${err}`);
+    }
+})();
 
 app.listen(config.PORT, () => {
     Logger.debug(`Server is up and running @ http://localhost:${config.PORT}`);

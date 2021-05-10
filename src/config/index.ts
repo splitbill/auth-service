@@ -14,4 +14,9 @@ export default {
     PORT: process.env.PORT,
     redis_host: process.env.RSHOST,
     redis_port: Number(process.env.RSPORT),
+    pg_host: process.env.PGHOST,
+    pg_port: process.env.PGPORT,
+    pg_user: process.env.PGUSER,
+    pg_database: process.env.PGDATABASE,
+    pg_password: process.env.PGPASSWORD
 }
