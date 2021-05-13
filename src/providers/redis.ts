@@ -11,7 +11,7 @@ const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client)
 
 client.on("error", function(error) {
-    console.error(error);
+    console.error('redis error:', error);
 });
 
 export {

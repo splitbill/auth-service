@@ -13,7 +13,9 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "types": ["reflect-metadata", "node"]
   },
   "include": [
     "src/**/*"

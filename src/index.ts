@@ -1,8 +1,8 @@
+import 'reflect-metadata';
 import app from "./providers/express";
 import * as database from './providers/database';
 import config from "./config";
 import Logger from "./providers/logger";
-
 /**
  * load database
  */
@@ -11,7 +11,7 @@ import Logger from "./providers/logger";
         await database.createDB();
         Logger.info('database is connected!');
     } catch (err) {
-        Logger.error(`Database not connected: ${err}`);
+        Logger.error(`Database err: ${err}`);
     }
 })();
 
