@@ -17,7 +17,6 @@ describe('Testing auth API', () => {
 
     it('Register (no body message)', async () => {
         const result = await request(app).post('/api/v1/auth/register');
-        console.log(result.body)
         expect(result.body.name).toBe('BadRequestError');
     });
 
@@ -28,6 +27,7 @@ describe('Testing auth API', () => {
                 username: faker.internet.userName(),
                 password: '123456',
             });
-        console.log('result:', result.body)
+        expect(result.body).toHaveProperty('token');
+        expect( typeof result.body.token).toBe('string');
     })
 })
