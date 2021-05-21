@@ -52,7 +52,18 @@ describe('Testing auth API', () => {
         expect(result.body.token.length > 0).toBe(true);
     });
 
-    it('Refresh token -> token is expire -> error', async () => {
-
+    it('Refresh token -> token is not valid -> error', async () => {
+        const register = await request(app)
+            .post('/api/v1/auth/register')
+            .send({
+                username: faker.internet.userName(),
+                password: '123456',
+            });
+        const result = await request(app)
+            .post('/api/v1/auth/refresh')
+            .send({
+                token: register.body.token,
+            });
+        expect(result.body.message).toBe('Unauthorized');
     });
 })

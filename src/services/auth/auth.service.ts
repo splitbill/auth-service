@@ -1,6 +1,7 @@
 import {Inject, Service} from "typedi";
 import jwt from 'jsonwebtoken';
 import {SignOptions} from "jsonwebtoken";
+import createHttpError from "http-errors";
 import config from '../../config';
 import {CreateUserDto, RefreshTokenDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
@@ -51,7 +52,7 @@ export class AuthService {
             // check token is valid
             const validate = await jwt.verify(refreshTokenDto.token, config.jwtRefreshToken);
             if (!validate) {
-                throw new Error('Token is not valid');
+                return new createHttpError.Unauthorized();
             }
             // check token inside redis database
             const decoded: any = await jwt.decode(refreshTokenDto.token);
@@ -64,10 +65,10 @@ export class AuthService {
                         token: await this.generateAccessToken(String(decoded.userId)),
                     }
                 } else {
-                    throw new Error('Token is not valid');
+                    return new createHttpError.Unauthorized();
                 }
             } else {
-                throw new Error('Token is not valid');
+                return new createHttpError.Unauthorized();
             }
         } catch (err) {
             throw err;
