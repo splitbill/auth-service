@@ -9,6 +9,7 @@ const client =  Redis.createClient({
 
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client)
+const quitAsync = promisify(client.quit).bind(client);
 
 client.on("error", function(error) {
     console.error('redis error:', error);
@@ -17,4 +18,5 @@ client.on("error", function(error) {
 export {
     getAsync,
     setAsync,
+    quitAsync
 }

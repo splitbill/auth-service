@@ -21,6 +21,6 @@ export default {
     pg_password: process.env.PGPASSWORD,
     jwtSecret: process.env.JWT_SECRET as string,
     jwtExpire: process.env.JWT_EXP,
-    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN,
+    jwtRefreshToken: process.env.JWT_REFRESH_TOKEN as string,
     jwtRefreshExpire: process.env.JWT_REFRESH_EXP,
 }

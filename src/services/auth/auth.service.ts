@@ -1,31 +1,47 @@
 import {Inject, Service} from "typedi";
 import jwt from 'jsonwebtoken';
-import config from '../../config';
 import {SignOptions} from "jsonwebtoken";
+import config from '../../config';
 import {CreateUserDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
-import {InsertResult} from "typeorm";
+import {Users} from "../user/user.model";
+import {setAsync} from "../../providers/redis";
 
 @Service()
 export class AuthService {
     constructor(@Inject() private readonly userService: UserService) {}
 
-    async createToken(userId: String) {
-        const payload = { userId };
-        const options: SignOptions = { expiresIn: config.jwtExpire };
-        return jwt.sign(payload, config.jwtSecret, options);
+    async generateAccessToken(userId: string) {
+      try {
+          const payload = { userId };
+          const options: SignOptions = { expiresIn: config.jwtExpire };
+          return jwt.sign(payload, config.jwtSecret, options);
+      } catch (err) {
+          throw new err;
+      }
+    }
+
+    async generateRefreshToken(userId: string) {
+        try {
+            const payload = { userId };
+            const options: SignOptions = { expiresIn: config.jwtRefreshToken };
+            const refresh = jwt.sign(payload, config.jwtRefreshToken, options);
+            await setAsync(userId, refresh);
+            return refresh;
+        } catch (err) {
+            throw new err;
+        }
     }
 
     async register(createUserDto: CreateUserDto) {
         try {
-            //todo: hash password
-            //todo: add refresh token
-            const newUser: InsertResult = await this.userService.create(createUserDto);
+            const newUser: Users = await this.userService.create(createUserDto);
             return {
-                token: await this.createToken(newUser.identifiers[0].id),
+                refresh: await this.generateRefreshToken(String(newUser.id)),
+                token: await this.generateAccessToken(String(newUser.id)),
             };
         } catch (err) {
-            return err;
+            throw new err;
         }
     }
 }
