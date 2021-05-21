@@ -1,4 +1,4 @@
-import {IsString, Length} from "class-validator";
+import {IsString, Length, IsJWT} from "class-validator";
 
 export class CreateUserDto {
     @IsString()
@@ -7,4 +7,9 @@ export class CreateUserDto {
     @IsString()
     @Length(6)
     password:string;
+}
+
+export class RefreshTokenDto {
+    @IsJWT()
+    token: string;
 }

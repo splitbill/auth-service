@@ -2,10 +2,10 @@ import {Inject, Service} from "typedi";
 import jwt from 'jsonwebtoken';
 import {SignOptions} from "jsonwebtoken";
 import config from '../../config';
-import {CreateUserDto} from "./auth.dto";
+import {CreateUserDto, RefreshTokenDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
 import {Users} from "../user/user.model";
-import {setAsync} from "../../providers/redis";
+import {getAsync, setAsync} from "../../providers/redis";
 
 @Service()
 export class AuthService {
@@ -17,7 +17,7 @@ export class AuthService {
           const options: SignOptions = { expiresIn: config.jwtExpire };
           return jwt.sign(payload, config.jwtSecret, options);
       } catch (err) {
-          throw new err;
+          throw err;
       }
     }
 
@@ -25,11 +25,11 @@ export class AuthService {
         try {
             const payload = { userId };
             const options: SignOptions = { expiresIn: config.jwtRefreshToken };
-            const refresh = jwt.sign(payload, config.jwtRefreshToken, options);
+            const refresh = await jwt.sign(payload, config.jwtRefreshToken, options);
             await setAsync(userId, refresh);
             return refresh;
         } catch (err) {
-            throw new err;
+            throw err;
         }
     }
 
@@ -41,7 +41,36 @@ export class AuthService {
                 token: await this.generateAccessToken(String(newUser.id)),
             };
         } catch (err) {
-            throw new err;
+            throw err;
+        }
+    }
+
+    async refresh(refreshTokenDto: RefreshTokenDto) {
+        //todo: refactor
+        try {
+            // check token is valid
+            const validate = await jwt.verify(refreshTokenDto.token, config.jwtRefreshToken);
+            if (!validate) {
+                throw new Error('Token is not valid');
+            }
+            // check token inside redis database
+            const decoded: any = await jwt.decode(refreshTokenDto.token);
+            if (decoded && decoded.userId) {
+                const activeRefreshToken = await getAsync(decoded.userId);
+                if (activeRefreshToken === refreshTokenDto.token) {
+                    // return new access token and refresh token
+                    return {
+                        refresh: await this.generateRefreshToken(String(decoded.userId)),
+                        token: await this.generateAccessToken(String(decoded.userId)),
+                    }
+                } else {
+                    throw new Error('Token is not valid');
+                }
+            } else {
+                throw new Error('Token is not valid');
+            }
+        } catch (err) {
+            throw err;
         }
     }
 }

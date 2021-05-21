@@ -1,7 +1,7 @@
 import {Inject, Service} from "typedi";
-import {Body, Get, JsonController, Post} from "routing-controllers";
+import {Body, JsonController, Post} from "routing-controllers";
 import Logger from "../../providers/logger";
-import {CreateUserDto} from "./auth.dto";
+import {CreateUserDto, RefreshTokenDto} from "./auth.dto";
 import {AuthService} from "./auth.service";
 
 @JsonController('/auth')
@@ -16,6 +16,16 @@ export class AuthController {
         } catch (err) {
             Logger.error(err);
             return err;
+        }
+    }
+
+    @Post('/refresh')
+    async refresh (@Body() refreshTokenDto: RefreshTokenDto) {
+        try {
+            return await this.authService.refresh(refreshTokenDto);
+        } catch (err) {
+            Logger.error(`Refresh ${err.message}`);
+            throw err;
         }
     }
 }

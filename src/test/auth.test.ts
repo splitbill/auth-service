@@ -33,5 +33,26 @@ describe('Testing auth API', () => {
         expect(result.body.token.length > 0 ).toBe(true);
         expect(result.body).toHaveProperty('refresh');
         expect(result.body.refresh.length > 0).toBe(true);
-    })
+    });
+
+    it('Refresh token -> create new access token', async () => {
+        // register new user for mocking data
+        const register = await request(app)
+                .post('/api/v1/auth/register')
+                .send({
+                    username: faker.internet.userName(),
+                    password: '123456',
+                });
+        const result = await request(app)
+            .post('/api/v1/auth/refresh')
+            .send({
+                token: register.body.refresh,
+            });
+        expect(result.body).toHaveProperty('token');
+        expect(result.body.token.length > 0).toBe(true);
+    });
+
+    it('Refresh token -> token is expire -> error', async () => {
+
+    });
 })
