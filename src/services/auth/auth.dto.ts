@@ -13,3 +13,12 @@ export class RefreshTokenDto {
     @IsJWT()
     token: string;
 }
+
+export class LoginDto {
+    @IsString()
+    username: string;
+
+    @IsString()
+    @Length(6)
+    password:string;
+}

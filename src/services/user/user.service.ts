@@ -21,4 +21,12 @@ export class UserService {
             throw new err;
         }
     }
+
+    async findByUsername(username: string) {
+        try {
+            return await this.userRepository.findOne({username});
+        } catch (err) {
+            throw new err;
+        }
+    }
 }

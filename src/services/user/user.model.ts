@@ -24,4 +24,7 @@ export class Users {
         this.password = await bcrypt.hash(this.password, salt);
     }
     //todo: implement compare password
+    async comparePassword(password: string) {
+        return await bcrypt.compare(password, this.password);
+    }
 }

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import {SignOptions} from "jsonwebtoken";
 import createHttpError from "http-errors";
 import config from '../../config';
-import {CreateUserDto, RefreshTokenDto} from "./auth.dto";
+import {CreateUserDto, LoginDto, RefreshTokenDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
 import {Users} from "../user/user.model";
 import {getAsync, setAsync} from "../../providers/redis";
@@ -41,6 +41,24 @@ export class AuthService {
                 refresh: await this.generateRefreshToken(String(newUser.id)),
                 token: await this.generateAccessToken(String(newUser.id)),
             };
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async login(loginDto: LoginDto) {
+        try {
+            const user: Users | undefined = await this.userService.findByUsername(loginDto.username);
+            if (!user) {
+                throw new createHttpError.Unauthorized();
+            }
+            const compare = user.comparePassword(user.password);
+            if (compare) {
+                return {
+                    refresh: await this.generateRefreshToken(String(user.id)),
+                    token: await this.generateAccessToken(String(user.id)),
+                };
+            }
         } catch (err) {
             throw err;
         }

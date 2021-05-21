@@ -66,4 +66,27 @@ describe('Testing auth API', () => {
             });
         expect(result.body.message).toBe('Unauthorized');
     });
+
+
+    it('login user', async () => {
+        const username = faker.internet.userName();
+        const password = '123456';
+        const register = await request(app)
+            .post('/api/v1/auth/register')
+            .send({
+                username,
+                password,
+            });
+
+        const result =  await request(app)
+            .post('/api/v1/auth/login')
+            .send({
+                username,
+                password,
+            });
+        expect(result.body).toHaveProperty('token');
+        expect(result.body.token.length > 0).toBe(true);
+        expect(result.body).toHaveProperty('refresh');
+        expect(result.body.refresh.length > 0).toBe(true);
+    });
 })
