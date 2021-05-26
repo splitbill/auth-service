@@ -8,6 +8,6 @@ export class UserController {
    constructor(private readonly userService: UserService) {}
     @Get('/users')
      async find() {
-        return await this.userService.findUser();
+        // return await this.userService.findUser();
     }
 }

@@ -6,7 +6,7 @@ import config from '../../config';
 import {CreateUserDto, LoginDto, RefreshTokenDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
 import {Users} from "../user/user.model";
-import {getAsync, setAsync} from "../../providers/redis";
+import {getAsync, rPushAsync, setAsync} from "../../providers/redis";
 
 @Service()
 export class AuthService {
@@ -61,6 +61,14 @@ export class AuthService {
             }
         } catch (err) {
             throw err;
+        }
+    }
+
+    async logout(token: string) {
+        try {
+            return await rPushAsync('blockedTokens', token);
+        } catch (err) {
+            throw new createHttpError.InternalServerError(err);
         }
     }
 

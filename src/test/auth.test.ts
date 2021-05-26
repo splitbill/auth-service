@@ -7,7 +7,6 @@ import {quitAsync} from "../providers/redis";
 
 describe('Testing auth API', () => {
     beforeAll(async () => {
-        //todo: create test database
         await createDB();
     });
 
@@ -71,7 +70,7 @@ describe('Testing auth API', () => {
     it('login user', async () => {
         const username = faker.internet.userName();
         const password = '123456';
-        const register = await request(app)
+        await request(app)
             .post('/api/v1/auth/register')
             .send({
                 username,
@@ -88,5 +87,20 @@ describe('Testing auth API', () => {
         expect(result.body.token.length > 0).toBe(true);
         expect(result.body).toHaveProperty('refresh');
         expect(result.body.refresh.length > 0).toBe(true);
+    });
+
+    it('Logout user', async () => {
+        const register = await request(app)
+            .post('/api/v1/auth/register')
+            .send({
+                username: faker.internet.userName(),
+                password: '123456',
+            });
+        const { token } = register.body;
+
+        const result = await request(app)
+            .get('/api/v1/auth/logout')
+            .set('authorization', token);
+        expect(result.body).toBe('ok');
     });
 })

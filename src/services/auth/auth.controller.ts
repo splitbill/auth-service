@@ -1,5 +1,5 @@
 import {Inject, Service} from "typedi";
-import {Body, JsonController, Post} from "routing-controllers";
+import {Body, Get, HeaderParam, JsonController, Post} from "routing-controllers";
 import Logger from "../../providers/logger";
 import {CreateUserDto, RefreshTokenDto, LoginDto} from "./auth.dto";
 import {AuthService} from "./auth.service";
@@ -33,6 +33,19 @@ export class AuthController {
     async login(@Body() loginDto: LoginDto) {
         try {
             return await this.authService.login(loginDto);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    @Get('/logout')
+    async logout(@HeaderParam("authorization") token: string) {
+        try {
+            const isOk = await this.authService.logout(token);
+            if (isOk) {
+                return 'ok';
+            }
+            return null;
         } catch (err) {
             throw err;
         }
