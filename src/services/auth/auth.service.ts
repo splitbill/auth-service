@@ -6,7 +6,7 @@ import config from '../../config';
 import {CreateUserDto, LoginDto, RefreshTokenDto} from "./auth.dto";
 import {UserService} from "../user/user.service";
 import {Users} from "../user/user.model";
-import {getAsync, rPushAsync, setAsync} from "../../providers/redis";
+import {getAsync, rDelAsync, rPushAsync, setAsync} from "../../providers/redis";
 
 @Service()
 export class AuthService {
@@ -66,6 +66,10 @@ export class AuthService {
 
     async logout(token: string) {
         try {
+            const decoded: any = await jwt.decode(token);
+            if (decoded && decoded.userId) {
+                await rDelAsync(decoded.userId);
+            }
             return await rPushAsync('blockedTokens', token);
         } catch (err) {
             throw new createHttpError.InternalServerError(err);
