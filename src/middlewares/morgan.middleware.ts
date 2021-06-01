@@ -16,7 +16,6 @@ const stream: StreamOptions = {
 // only warning and error messages in production.
 const skip = () => {
     const env = process.env.NODE_ENV || "development";
-    console.log(env)
     return env !== "development";
 };
 

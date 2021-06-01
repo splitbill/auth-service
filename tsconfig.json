@@ -12,7 +12,10 @@
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "types": ["reflect-metadata", "node", "jest"]
   },
   "include": [
     "src/**/*"
